@@ -1,0 +1,46 @@
+@startuml
+DefaultListableBeanFactory -> DefaultListableBeanFactory: preInstantiateSingletons
+note over DefaultListableBeanFactory: 创建bean入口
+activate DefaultListableBeanFactory
+DefaultListableBeanFactory -> AbstractBeanFactory: doGetBean
+activate AbstractBeanFactory
+AbstractBeanFactory -> DefaultSingletonBeanRegistry: getSingleton
+activate DefaultSingletonBeanRegistry
+DefaultSingletonBeanRegistry -> AbstractAutowireCapableBeanFactory: createBean
+activate AbstractAutowireCapableBeanFactory
+AbstractAutowireCapableBeanFactory -> AbstractAutowireCapableBeanFactory: doCreateBean
+activate AbstractAutowireCapableBeanFactory
+note over AbstractAutowireCapableBeanFactory: 创建bean的具体方法
+AbstractAutowireCapableBeanFactory -> AbstractAutowireCapableBeanFactory: addSingletonFactory(加入三级缓存)
+activate AbstractAutowireCapableBeanFactory
+deactivate AbstractAutowireCapableBeanFactory
+AbstractAutowireCapableBeanFactory -> AbstractAutowireCapableBeanFactory: populateBean(bean属性填充)
+activate AbstractAutowireCapableBeanFactory
+deactivate AbstractAutowireCapableBeanFactory
+AbstractAutowireCapableBeanFactory -> AbstractAutowireCapableBeanFactory: applyPropertyValues(处理依赖)
+activate AbstractAutowireCapableBeanFactory
+AbstractAutowireCapableBeanFactory -> BeanDefinitionValueResolver: resolveValueIfNecessary()
+activate BeanDefinitionValueResolver
+BeanDefinitionValueResolver -> BeanDefinitionValueResolver: resolveReference
+activate BeanDefinitionValueResolver
+BeanDefinitionValueResolver -> AbstractBeanFactory: getBean(获取关联的itBean)
+activate AbstractBeanFactory
+AbstractBeanFactory -> AbstractAutowireCapableBeanFactory: createBean(创建itBean)
+activate AbstractBeanFactory
+AbstractAutowireCapableBeanFactory -> AbstractAutowireCapableBeanFactory: doCreateBean
+activate AbstractAutowireCapableBeanFactory
+AbstractAutowireCapableBeanFactory -> AbstractAutowireCapableBeanFactory: populateBean(填充lagouBean)
+activate AbstractAutowireCapableBeanFactory
+AbstractAutowireCapableBeanFactory -> BeanDefinitionValueResolver: resolveValueIfNecessary()
+activate BeanDefinitionValueResolver
+BeanDefinitionValueResolver -> AbstractBeanFactory: getBean(itBean)
+activate AbstractBeanFactory
+AbstractBeanFactory -> DefaultSingletonBeanRegistry: getSingleton(获取early的lagouBean)
+activate DefaultSingletonBeanRegistry
+DefaultSingletonBeanRegistry --> AbstractBeanFactory:lagouBean
+deactivate DefaultSingletonBeanRegistry
+deactivate AbstractBeanFactory
+deactivate AbstractBeanFactory
+AbstractBeanFactory --> BeanDefinitionValueResolver: Object(itBean)
+deactivate BeanDefinitionValueResolver
+@enduml

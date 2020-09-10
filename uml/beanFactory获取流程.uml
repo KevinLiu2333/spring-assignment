@@ -1,0 +1,17 @@
+@startuml
+AbstractApplicationContext -> AbstractApplicationContext: 1:obtainFreshBeanFactory
+activate AbstractApplicationContext
+
+AbstractApplicationContext -> AbstractRefreshableApplicationContext: 2:refreshBeanFactory
+activate AbstractRefreshableApplicationContext
+
+AbstractRefreshableApplicationContext -> AbstractRefreshableApplicationContext: 3:createBeanFactory
+activate AbstractRefreshableApplicationContext
+deactivate AbstractRefreshableApplicationContext
+
+AbstractApplicationContext -> AbstractRefreshableApplicationContext: 4:getBeanFactory
+activate AbstractRefreshableApplicationContext
+AbstractRefreshableApplicationContext --> AbstractApplicationContext: 5:DefaultListableBeanFactory
+deactivate AbstractRefreshableApplicationContext
+
+@enduml

@@ -1,0 +1,49 @@
+@startuml
+AbstractBeanFactory -> AbstractBeanFactory: getBean
+activate AbstractBeanFactory
+AbstractBeanFactory -> DefaultSingletonBeanRegistry: getSingleton
+note over AbstractBeanFactory:创建bean的入口
+activate DefaultSingletonBeanRegistry
+DefaultSingletonBeanRegistry -> AbstractAutowireCapableBeanFactory: createBean(创建lagouBean)
+activate AbstractAutowireCapableBeanFactory
+AbstractAutowireCapableBeanFactory --> DefaultSingletonBeanRegistry: addSingletonFactory(lagouBean加入三级缓存)
+activate DefaultSingletonBeanRegistry
+deactivate DefaultSingletonBeanRegistry
+DefaultSingletonBeanRegistry --> AbstractAutowireCapableBeanFactory
+AbstractAutowireCapableBeanFactory --> BeanDefinitionValueResolver: resolveValueIfNecessary(获取itBean引用值)
+activate BeanDefinitionValueResolver
+BeanDefinitionValueResolver -> AbstractBeanFactory: getBean(发现没有itBean,创建itBean)
+activate AbstractBeanFactory
+AbstractBeanFactory -> DefaultSingletonBeanRegistry: getSingleton
+activate DefaultSingletonBeanRegistry
+DefaultSingletonBeanRegistry -> AbstractAutowireCapableBeanFactory: createBean(创建itBean)
+activate AbstractAutowireCapableBeanFactory
+AbstractAutowireCapableBeanFactory --> DefaultSingletonBeanRegistry: addSingletonFactory(itBean加入三级缓存)
+activate DefaultSingletonBeanRegistry
+deactivate DefaultSingletonBeanRegistry
+DefaultSingletonBeanRegistry --> AbstractAutowireCapableBeanFactory
+AbstractAutowireCapableBeanFactory --> BeanDefinitionValueResolver: resolveValueIfNecessary(获取lagouBean引用值)
+activate BeanDefinitionValueResolver
+BeanDefinitionValueResolver -> AbstractBeanFactory: getBean(找factory要lagouBean)
+activate AbstractBeanFactory
+AbstractBeanFactory -> DefaultSingletonBeanRegistry: getSingleton(从三级缓存中拿lagouBean,并放入二级缓存)
+activate DefaultSingletonBeanRegistry
+deactivate DefaultSingletonBeanRegistry
+DefaultSingletonBeanRegistry --> AbstractBeanFactory: 返回lagouBean
+AbstractBeanFactory --> BeanDefinitionValueResolver: 返回lagouBean引用给resolver
+deactivate AbstractBeanFactory
+BeanDefinitionValueResolver --> AbstractAutowireCapableBeanFactory: 返回lagouBean
+deactivate BeanDefinitionValueResolver
+AbstractAutowireCapableBeanFactory --> DefaultSingletonBeanRegistry: itBean创建完毕
+deactivate AbstractAutowireCapableBeanFactory
+DefaultSingletonBeanRegistry --> AbstractBeanFactory: itBean创建流程结束
+deactivate DefaultSingletonBeanRegistry
+AbstractBeanFactory --> BeanDefinitionValueResolver: 创建好的itBean交给resolver,作为lagouBean的引用
+deactivate AbstractBeanFactory
+BeanDefinitionValueResolver --> AbstractAutowireCapableBeanFactory: 返回lagouBean依赖的itBean的引用
+deactivate BeanDefinitionValueResolver
+AbstractAutowireCapableBeanFactory --> DefaultSingletonBeanRegistry: lagouBean创建完毕
+deactivate AbstractAutowireCapableBeanFactory
+DefaultSingletonBeanRegistry --> AbstractBeanFactory: lagouBean创建流程结束
+deactivate DefaultSingletonBeanRegistry
+@enduml

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--根标签beans,里面配置一个又一个子标签,每一个子标签bean都是一个类的配置-->
+<beans>
+    <!--  class:全限定类名 id:标识对象 -->
+    <bean id="accountDao" class="com.lagou.edu.dao.impl.JdbcAccountDaoImpl">
+        <property name="connectionUtils" ref="connectionUtils"></property>
+
+    </bean>
+    <bean id="transferService" class="com.lagou.edu.service.impl.TransferServiceImpl">
+        <!--set+ name 之后锁定到传值的set方法了，通过反射技术可以调用该方法传入对应的值-->
+        <property name="AccountDao" ref="accountDao"></property>
+    </bean>
+    <!--  配置新增的三个Bean  -->
+    <bean id="connectionUtils" class="com.lagou.edu.utils.ConnectionUtils">
+
+    </bean>
+    <!--  事务管理器  -->
+    <bean id="transactionManager" class="com.lagou.edu.utils.TransactionManager">
+        <property name="connectionUtils" ref="connectionUtils"></property>
+    </bean>
+    <!--  代理工厂对象  -->
+    <bean id="proxyFactory" class="com.lagou.edu.factory.ProxyFactory">
+        <property name="transactionManager" ref="transactionManager">
+        </property>
+    </bean>
+</beans>
